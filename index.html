@@ -9,14 +9,107 @@
 </head>
 <body>
   <h1>Cambio Unico</h1>
-  <p>Esta es una versión PWA de tu herramienta de análisis de conducta.</p>
+
+  <form id="evaluacion-form">
+    <!-- Edad -->
+    <label for="edad">Edad:</label>
+    <input type="number" id="edad" name="edad" min="5" max="70" required><br><br>
+
+    <!-- Vive con -->
+    <label for="convivencia">Vive con:</label>
+    <select id="convivencia" name="convivencia" required>
+      <option value="">Seleccione</option>
+      <option value="ambos">Padre y madre presentes</option>
+      <option value="solo_madre">Solo madre</option>
+      <option value="solo_padre">Solo padre</option>
+      <option value="madre_fallecida">Madre fallecida</option>
+      <option value="padre_fallecido">Padre fallecido</option>
+      <option value="tutor">Tía/tutor legal</option>
+      <option value="otros">Otros</option>
+    </select><br><br>
+
+    <!-- Entorno social -->
+    <label for="entorno">Entorno socioeconómico y cultural:</label>
+    <select id="entorno" name="entorno">
+      <option value="alto">Alto</option>
+      <option value="medio">Medio</option>
+      <option value="bajo">Bajo</option>
+    </select><br><br>
+
+    <!-- Emociones -->
+    <label for="emociones">Emoción (selecciona las predominantes):</label><br>
+    <textarea id="emociones" name="emociones" rows="3" cols="50" placeholder="Ej: tristeza, alegría, ansiedad, etc."></textarea><br><br>
+
+    <!-- Frecuencia de interacción -->
+    <label for="frecuencia">Frecuencia de interacción social:</label>
+    <select id="frecuencia" name="frecuencia">
+      <option value="alta">Alta (diaria)</option>
+      <option value="media">Media (semanal)</option>
+      <option value="baja">Baja (mensual o menor)</option>
+    </select><br><br>
+
+    <!-- Educación -->
+    <label for="educacion">Nivel educativo alcanzado:</label>
+    <select id="educacion" name="educacion">
+      <option value="ninguno">Ninguno</option>
+      <option value="primaria">Primaria</option>
+      <option value="secundaria">Secundaria</option>
+      <option value="universitario">Universitario</option>
+    </select><br><br>
+
+    <!-- Actividad observada -->
+    <label for="actividad">Simplificación de interacciones sociales:</label>
+    <select id="actividad" name="actividad">
+      <option value="familia">Relaciones familiares</option>
+      <option value="amistades">Amistades</option>
+      <option value="romanticas">Relaciones románticas</option>
+      <option value="grupo">Impacto de grupos sociales</option>
+      <option value="educativo">Influencia educativa</option>
+      <option value="biologico">Factores biológicos</option>
+    </select><br><br>
+
+    <button type="submit">Evaluar</button>
+  </form>
+
+  <div id="resultado"></div>
+
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("Service Worker registrado"))
-        .catch(err => console.error("Error al registrar SW:", err));
+      navigator.serviceWorker.register('service-worker.js');
     }
+
+    document.getElementById('evaluacion-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const edad = parseInt(document.getElementById('edad').value);
+      const convivencia = document.getElementById('convivencia').value;
+      const entorno = document.getElementById('entorno').value;
+      const emociones = document.getElementById('emociones').value.trim();
+      const frecuencia = document.getElementById('frecuencia').value;
+      const educacion = document.getElementById('educacion').value;
+      const actividad = document.getElementById('actividad').value;
+
+      // Diagnóstico simple
+      let pronostico = "Pronóstico reservado.";
+      if (emociones.includes("ansiedad") || emociones.includes("ira")) {
+        pronostico = "Alta probabilidad de conducta impulsiva bajo presión.";
+      } else if (emociones.includes("alegría") || emociones.includes("curiosidad")) {
+        pronostico = "Alta predisposición al aprendizaje y adaptación social.";
+      }
+
+      document.getElementById('resultado').innerHTML = `
+        <h2>Diagnóstico</h2>
+        <p><strong>Edad:</strong> ${edad}</p>
+        <p><strong>Convivencia:</strong> ${convivencia}</p>
+        <p><strong>Entorno:</strong> ${entorno}</p>
+        <p><strong>Emociones:</strong> ${emociones}</p>
+        <p><strong>Frecuencia social:</strong> ${frecuencia}</p>
+        <p><strong>Educación:</strong> ${educacion}</p>
+        <p><strong>Área clave observada:</strong> ${actividad}</p>
+        <h3>Pronóstico:</h3>
+        <p>${pronostico}</p>
+      `;
+    });
   </script>
 </body>
 </html>
